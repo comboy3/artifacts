@@ -1,0 +1,1 @@
+web: gunicorn shockhi_check_project.wsgi shockhi_check:app --log-file=-

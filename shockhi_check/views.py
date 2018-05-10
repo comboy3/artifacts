@@ -33,9 +33,9 @@ def doPost(request):
                 responses.append(LineReplyMessage.make_text_response('てへぺろ'))
 
         # 返信する
-        LineReplyMessage.send_reply(replyToken, responses)
+        req = LineReplyMessage.send_reply(replyToken, responses)
         
-    return HttpResponse('', 200, {})    
+    return HttpResponse(req)    
 
 class LineReplyMessage:
     ReplyEndpoint = 'https://api.line.me/v2/bot/message/reply'
@@ -59,8 +59,10 @@ class LineReplyMessage:
             'Authorization': 'Bearer {}'.format(AccessToken)
         }
 
-        requests.post(
+        req = requests.post(
             LineReplyMessage.ReplyEndpoint,
             data=json.dumps(payload),
             headers=headers)
+
+        return req
     

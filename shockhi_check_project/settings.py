@@ -25,7 +25,7 @@ SECRET_KEY = '0+g3__x*emnpdp1kzv=af5qz&nh64yw5lqpl4pn9i93%%&)%0z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["244724f2.ngrok.io", "enigmatic-citadel-97352.herokuapp.com"]
+ALLOWED_HOSTS = ["29a3694c.ngrok.io", "enigmatic-citadel-97352.herokuapp.com"]
 
 
 # Application definition

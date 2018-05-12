@@ -12,7 +12,7 @@ AccessToken = "8GyCMQe6p9BVNXNwvl9ysE2BInxVnvXedqCqiBfUWbkqW1k+/JyjuNMUkP5VcI9Yv
 def reply_to_line(params):
 
     a = Token.get_deferred_fields
-    logger.log(a)
+    logger.info(a)
 
     for event in params['events']:
         responses = []

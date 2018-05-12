@@ -15,6 +15,20 @@ access_token = "8GyCMQe6p9BVNXNwvl9ysE2BInxVnvXedqCqiBfUWbkqW1k+/JyjuNMUkP5VcI9Y
 
 def reply_to_line(params):
 
+    # params = {
+    #     "events" : {
+    #         "replyToken" : "test",
+    #         "type" : "message",
+    #         "source" : { 
+    #             "userId" : "12345"
+    #         },
+    #         "message" : {
+    #             "type" : "text",
+    #             "text" : "500"
+    #         }
+    #     }
+    # }
+
     for event in params['events']:
         responses = []
 
@@ -23,6 +37,7 @@ def reply_to_line(params):
 
         source = event["source"]
         reply_user_id = source["userId"]
+        logger.info(reply_user_id)
 
         # ユーザーIDの登録
         t = User.objects.get_or_create(user_id=reply_user_id)
@@ -32,7 +47,7 @@ def reply_to_line(params):
             message = event['message']
             if message['type'] == 'text':
 
-                text = message['type']
+                text = message['text']
 
                 # 食費の登録
                 s = Shokuhi(user_id=reply_user_id, money=text)

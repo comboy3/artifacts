@@ -32,7 +32,8 @@ def reply_to_line(params):
         # 返信する
         req = LineReplyMessage.send_reply(replyToken, responses)
         
-        userId = event["source"].userId
+        source = event["source"]
+        userId = source["userId"]
 
         t = Token(token=userId)
         t.save()

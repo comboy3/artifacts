@@ -1,21 +1,22 @@
 from django.db import models
+import uuid
 
 # Create your models here.
-class Token(models.Model):
+class User(models.Model):
     # ユーザ管理
     # id = models.IntegerField(primary_key=True)
-    token = models.CharField(max_length=255)
+    user_id = models.CharField(primary_key=True, default=uuid.uuid4, max_length=255)
     create_date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.token
+        return self.user_id
 
 class Shokuhi(models.Model):
     # 食費管理
     # id = models.IntegerField(primary_key=True)
-    token = models.ForeignKey("Token", on_delete=models.CASCADE)
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
     money = models.IntegerField()
     create_date = models.DateTimeField(auto_now_add=True)
         
     def __str__(self):
-        return "%s %s" % (self.token, self.money)
+        return "%s %s" % (self.user_id, self.money)

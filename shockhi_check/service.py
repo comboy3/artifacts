@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-from datetime import datetime, date
+import datetime 
 
 import pandas as pd
 import requests
@@ -53,8 +53,8 @@ def reply_to_line(params):
                 s.save()
 
                 # 月末日の取得
-                now_year = datetime.now().year
-                now_month = datetime.now().month
+                now_year = datetime.datetime.now().year
+                now_month = datetime.datetime.now().month
 
                 end_day = datetime.date(now_year, now_month, 1) - datetime.timedelta(days=1)
 

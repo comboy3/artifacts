@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
-
+from .models import Token,Shokuhi
 
 #トークン
 AccessToken = "8GyCMQe6p9BVNXNwvl9ysE2BInxVnvXedqCqiBfUWbkqW1k+/JyjuNMUkP5VcI9YveuboZiu7dzVUJzs/8IIdbeCAEdPkAQQOHpjpuudZwYchZOw4cJWfU5E5xBvmgP3TPMDgzqJzndpm4ERjpFNEQdB04t89/1O/w1cDnyilFU="
 
-def reply_to_line(body):
-    for event in body['events']:
+def reply_to_line(params):
+
+    a = Token.get_deferred_fields
+    print(a)
+
+    for event in params['events']:
         responses = []
 
         replyToken = event['replyToken']
         type = event['type']
-        
+
         if type == 'message':
             message = event['message']
             if message['type'] == 'text':
@@ -23,8 +27,13 @@ def reply_to_line(body):
                 responses.append(LineReplyMessage.make_text_response('てへぺろ'))
 
         # 返信する
-        LineReplyMessage.send_reply(replyToken, responses)
+        req = LineReplyMessage.send_reply(replyToken, responses)
+        t = Token(token=replyToken)
+        s = Shokuhi(token=replyToken, money=message["text"])
+        t.save()
+        s.save()
 
+    return req
 
 class LineReplyMessage:
     ReplyEndpoint = 'https://api.line.me/v2/bot/message/reply'
@@ -48,8 +57,9 @@ class LineReplyMessage:
             'Authorization': 'Bearer {}'.format(AccessToken)
         }
 
-        requests.post(
+        req = requests.post(
             LineReplyMessage.ReplyEndpoint,
             data=json.dumps(payload),
             headers=headers)
-     
+        
+        return req

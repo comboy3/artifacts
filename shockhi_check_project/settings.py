@@ -25,7 +25,7 @@ SECRET_KEY = '0+g3__x*emnpdp1kzv=af5qz&nh64yw5lqpl4pn9i93%%&)%0z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["29a3694c.ngrok.io", "enigmatic-citadel-97352.herokuapp.com"]
+ALLOWED_HOSTS = ["*","127.0.0.1:8000", 'bd681770.ngrok.io', "enigmatic-citadel-97352.herokuapp.com"]
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shockhi_check',
+    'shockhi_check.apps.ShockhiCheckConfig',
 ]
 
 MIDDLEWARE = [
@@ -81,10 +81,10 @@ DATABASES = {
         
         # POSTGRESQL
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd1pe27n4au26l1',
-        'USER': 'umnadbpctjxikz',
-        'PASSWORD': 'a963e9c9cdb9e6f7f7869e7e134ad122e338b33edb87f0c3c3088105fd2bbdab',
-        'HOST': 'ec2-54-225-200-15.compute-1.amazonaws.com',
+        'NAME': 'dc5o6a64tuv0fj',
+        'USER': 'rjihbgqxijzswz',
+        'PASSWORD': '25f402d9276d03d3cba8e0171bba88dd14f58cf59774309d689d4f6326bfa3ad',
+        'HOST': 'ec2-54-243-137-182.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }

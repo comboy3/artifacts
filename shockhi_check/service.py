@@ -8,8 +8,8 @@ AccessToken = "8GyCMQe6p9BVNXNwvl9ysE2BInxVnvXedqCqiBfUWbkqW1k+/JyjuNMUkP5VcI9Yv
 
 def reply_to_line(params):
 
-    a = Token.get_deferred_fields
-    print(a)
+    # a = Token.get_deferred_fields
+    # print(a)
 
     for event in params['events']:
         responses = []
@@ -28,10 +28,10 @@ def reply_to_line(params):
 
         # 返信する
         req = LineReplyMessage.send_reply(replyToken, responses)
-        t = Token(token=replyToken)
-        s = Shokuhi(token=replyToken, money=message["text"])
-        t.save()
-        s.save()
+        # t = Token(token=replyToken)
+        # s = Shokuhi(token=replyToken, money=message["text"])
+        # t.save()
+        # s.save()
 
     return req
 

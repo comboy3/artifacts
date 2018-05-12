@@ -33,8 +33,8 @@ def reply_to_line(params):
         req = LineReplyMessage.send_reply(replyToken, responses)
         t = Token(token=replyToken)
         t.save()
-        s = Shokuhi(token=replyToken, money=500)
-        s.save()
+        # s = Shokuhi(token=replyToken, money=500)
+        # s.save()
 
     return req
 

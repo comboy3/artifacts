@@ -40,9 +40,8 @@ def reply_to_line(params):
         logger.info(reply_user_id)
 
         # ユーザーIDの登録
-        t = User.objects.get_or_create(user_id=reply_user_id)
-        t.save()
-
+        User.objects.get_or_create(user_id=reply_user_id)
+        
         if type == 'message':
             message = event['message']
             if message['type'] == 'text':

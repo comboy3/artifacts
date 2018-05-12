@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+import logging
+from shockhi_check.models import Token, Shokuhi
+
+logger = logging.getLogger()
 
 #トークン
 AccessToken = "8GyCMQe6p9BVNXNwvl9ysE2BInxVnvXedqCqiBfUWbkqW1k+/JyjuNMUkP5VcI9YveuboZiu7dzVUJzs/8IIdbeCAEdPkAQQOHpjpuudZwYchZOw4cJWfU5E5xBvmgP3TPMDgzqJzndpm4ERjpFNEQdB04t89/1O/w1cDnyilFU="
 
 def reply_to_line(params):
 
-    # a = Token.get_deferred_fields
-    # print(a)
+    a = Token.get_deferred_fields
+    logger.log(a)
 
     for event in params['events']:
         responses = []
@@ -27,10 +31,10 @@ def reply_to_line(params):
 
         # 返信する
         req = LineReplyMessage.send_reply(replyToken, responses)
-        # t = Token(token=replyToken)
-        # s = Shokuhi(token=replyToken, money=message["text"])
-        # t.save()
-        # s.save()
+        t = Token(token=replyToken)
+        s = Shokuhi(token=replyToken, money=message["text"])
+        t.save()
+        s.save()
 
     return req
 

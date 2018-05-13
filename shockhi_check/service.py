@@ -48,7 +48,6 @@ def reply_to_line(params):
                     s = Shokuhi(user_id=reply_user_id, money=reply_text)
                     s.save()
 
-
                     # 中央値の算出
                     money_list = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date]).values("money")
                     df_money_list = read_frame(money_list)
@@ -62,7 +61,7 @@ def reply_to_line(params):
 
                     # 中央値を返す
                     # head = "本日の食費現在：{0:,}円".format(today_total)
-                    text = "{0}月の食費を教えるよ\n今日：{1:,}円\n今月：{2:,}円\n予想：{3:,}円".format(now_month, today_total, total, month_money) 
+                    text = "{0}月の食費を教えるよ\n本日：{1:,}円\n今月：{2:,}円\n予想：{3:,}円".format(now_month, today_total, total, month_money) 
                 else:
                     d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date])
                     d.delete()

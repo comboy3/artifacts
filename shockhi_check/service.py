@@ -3,7 +3,7 @@ import json
 import logging
 import datetime 
 
-import pandas as pd
+from django_pandas.io import read_frame
 import requests
 
 from shockhi_check.models import Shokuhi, User
@@ -46,23 +46,24 @@ def reply_to_line(params):
             message = event['message']
             if message['type'] == 'text':
 
-                text = message['text']
+                reply_text = message['text']
 
                 # 食費の登録
-                s = Shokuhi(user_id=reply_user_id, money=text)
+                s = Shokuhi(user_id=reply_user_id, money=reply_text)
                 s.save()
 
                 # 月末日の取得
                 now_year = datetime.datetime.now().year
                 now_month = datetime.datetime.now().month
 
-                end_day = datetime.date(now_year, now_month, 1) - datetime.timedelta(days=1)
+                end_date = datetime.date(now_year, now_month, 1) - datetime.timedelta(days=1)
+                end_day = end_date.strftime("%d")
 
                 # 中央値の算出
-                shokuhi_list = Shokuhi.objects.filter(user_id=reply_user_id)
-                df_shokuhi_list = pd.DataFrame(shokuhi_list)
-                median = df_shokuhi_list["money"].median()
-                month_money = round(median) * end_day
+                money_list = Shokuhi.objects.filter(user_id=reply_user_id).values("money")
+                df_money_list = read_frame(money_list)
+                median = df_money_list.median()
+                month_money = round(median) * int(end_day)
 
                 # 中央値を返す
                 responses.append(LineReplyMessage.make_text_response(month_money))

@@ -15,20 +15,6 @@ access_token = "8GyCMQe6p9BVNXNwvl9ysE2BInxVnvXedqCqiBfUWbkqW1k+/JyjuNMUkP5VcI9Y
 
 def reply_to_line(params):
 
-    # params = {
-    #     "events" : {
-    #         "replyToken" : "test",
-    #         "type" : "message",
-    #         "source" : { 
-    #             "userId" : "12345"
-    #         },
-    #         "message" : {
-    #             "type" : "text",
-    #             "text" : "500"
-    #         }
-    #     }
-    # }
-
     for event in params['events']:
         responses = []
 
@@ -62,9 +48,8 @@ def reply_to_line(params):
                 # 中央値の算出
                 money_list = Shokuhi.objects.filter(user_id=reply_user_id).values("money")
                 df_money_list = read_frame(money_list)
-                median = df_money_list.median()
-                month_money = round(median) * int(end_day)
-                
+                median = df_money_list["money"].median()
+                month_money = int(median) * int(end_day)
 
                 # 中央値を返す
                 responses.append(LineReplyMessage.make_text_response(month_money))

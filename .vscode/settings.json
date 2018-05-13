@@ -1,0 +1,14 @@
+{
+    "python.pythonPath": "C:\\workspace\\env1\\Scripts\\python.exe",
+    "python.unitTest.unittestArgs": [
+        "-v",
+        "-s",
+        "./shockhi_check_project",
+        "-p",
+        "test*.py"
+    ],
+    "python.unitTest.unittestEnabled": false,
+    "python.unitTest.promptToConfigure": false,
+    "python.unitTest.pyTestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false,
+}

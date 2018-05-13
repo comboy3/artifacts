@@ -64,6 +64,7 @@ def reply_to_line(params):
                 df_money_list = read_frame(money_list)
                 median = df_money_list.median()
                 month_money = round(median) * int(end_day)
+                
 
                 # 中央値を返す
                 responses.append(LineReplyMessage.make_text_response(month_money))

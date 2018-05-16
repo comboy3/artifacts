@@ -48,7 +48,7 @@ def reply_to_line(params):
                     d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date])
                     d.delete()
                     text = "今月をリセットしました"
-                elif reply_text == "今日をリセット"
+                elif reply_text == "今日をリセット":
                     d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__date=now_date)
                     d.delete()
                     text = "今日をリセットしました"

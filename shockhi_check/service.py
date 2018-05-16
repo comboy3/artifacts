@@ -55,7 +55,7 @@ def reply_to_line(params):
 
                 elif type(reply_text) == "int" or reply_text == "予測":
                     
-                    if reply_text != "予測"
+                    if reply_text != "予測":
                         # 食費の登録
                         s = Shokuhi(user_id=reply_user_id, money=reply_text)
                         s.save()

@@ -53,7 +53,7 @@ def reply_to_line(params):
                     d.delete()
                     text = "今日をリセットしました"
 
-                elif type(reply_text) == "int" or reply_text == "予測":
+                elif reply_text.isdecimal() or reply_text == "予測":
                     
                     if reply_text != "予測":
                         # 食費の登録

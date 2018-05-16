@@ -30,7 +30,7 @@ def reply_to_line(params):
         
         if type == 'message':
             message = event['message']
-            if message['type'] == 'text':
+            if message['type'] == 'text' & type(message['text']) == 'int':
 
                 reply_text = message['text']
 
@@ -38,35 +38,38 @@ def reply_to_line(params):
                 now_date = datetime.datetime.now()
                 now_year = now_date.year
                 now_month = now_date.month
+                now_day = now_date.day
 
                 start_date = datetime.date(now_year, now_month, 1)
                 end_date = datetime.date(now_year, now_month + 1, 1) - datetime.timedelta(days=1)
                 end_day = end_date.strftime("%d")
 
-                if reply_text != "リセット":
-                    # 食費の登録
-                    s = Shokuhi(user_id=reply_user_id, money=reply_text)
-                    s.save()
-
-                    # 中央値の算出
-                    money_list = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date]).values("money")
-                    df_money_list = read_frame(money_list)
-                    total = df_money_list["money"].sum()
-                    median = df_money_list["money"].median()
-                    month_money = int(median) * int(end_day)
-
-                    today_money_list = money_list.filter(create_date__date=now_date)
-                    df_today_money_list = read_frame(today_money_list)
-                    today_total = df_today_money_list["money"].sum()
-
-                    # 中央値を返す
-                    # head = "本日の食費現在：{0:,}円".format(today_total)
-                    text = "{0}月の食費を教えるよ\n本日：{1:,}円\n今月：{2:,}円\n予想：{3:,}円".format(now_month, today_total, total, month_money) 
-                else:
+                if reply_text == "リセット":
                     d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date])
                     d.delete()
                     text = "{0}月分をリセットしました".format(now_month)
+                else:
+                    if reply_text != "予測":
+                        # 食費の登録
+                        s = Shokuhi(user_id=reply_user_id, money=reply_text)
+                        s.save()
 
+                    # 食費の取得
+                    money_list = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date]).values("money")
+                    if reply_text != "予測":
+                        total = df_money_list["money"].sum()
+                        today_money_list = money_list.filter(create_date__date=now_date)
+                        df_today_money_list = read_frame(today_money_list)
+                        today_total = df_today_money_list["money"].sum()
+
+                        text = "{0}月{1}日の食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円".format(now_month, now_day, today_total, total) 
+                    else:                 
+                        df_money_list = read_frame(money_list)
+                        median = df_money_list["money"].median()
+                        month_money = int(median) * int(end_day)
+                  
+                        text = "{0}月の食費の予測だよ\n予測：{1:,}円".format(now_month, month_money)                     
+                    
                 responses.append(LineReplyMessage.make_text_response(text))
             else:
                 # テキスト以外のメッセージにはてへぺろしておく
@@ -110,3 +113,7 @@ class LineReplyMessage:
             headers=headers)
         
         return req
+
+
+class PredictionMoney:
+    """ 予測計算するクラス """

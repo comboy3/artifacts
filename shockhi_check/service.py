@@ -30,7 +30,7 @@ def reply_to_line(params):
         
         if type == 'message':
             message = event['message']
-            if message['type'] == 'text' & type(message['text']) == 'int':
+            if message['type'] == 'text':
 
                 reply_text = message['text']
 
@@ -44,12 +44,18 @@ def reply_to_line(params):
                 end_date = datetime.date(now_year, now_month + 1, 1) - datetime.timedelta(days=1)
                 end_day = end_date.strftime("%d")
 
-                if reply_text == "リセット":
+                if reply_text == "今月をリセット":
                     d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date])
                     d.delete()
-                    text = "{0}月分をリセットしました".format(now_month)
-                else:
-                    if reply_text != "予測":
+                    text = "今月をリセットしました"
+                elif reply_text == "今日をリセット"
+                    d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__date=now_date)
+                    d.delete()
+                    text = "今日をリセットしました"
+
+                elif type(reply_text) == "int" or reply_text == "予測":
+                    
+                    if reply_text != "予測"
                         # 食費の登録
                         s = Shokuhi(user_id=reply_user_id, money=reply_text)
                         s.save()
@@ -69,7 +75,9 @@ def reply_to_line(params):
                         month_money = int(median) * int(end_day)
                   
                         text = "{0}月の食費の予測だよ\n予測：{1:,}円".format(now_month, month_money)                     
-                    
+                else:
+                    text = "「金額（数字）」\nor「今日（今月）をリセット」\nor「予測」を入力してね"
+
                 responses.append(LineReplyMessage.make_text_response(text))
             else:
                 # テキスト以外のメッセージにはてへぺろしておく

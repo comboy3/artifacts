@@ -71,7 +71,7 @@ def reply_to_line(params):
                             df_today_money_list = read_frame(today_money_list)
                             today_total = df_today_money_list["money"].sum()
 
-                            text = "{0}月{1}日の食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円".format(now_month, now_day, today_total, total) 
+                            text = "食費を教えるよ\n{0}月{1}日：{2:,}円\n{0}月合計：{3:,}円".format(now_month, now_day, today_total, total) 
                         else:                 
                             median = df_money_list["money"].median()
                             month_money = int(median) * int(end_day)
@@ -80,7 +80,7 @@ def reply_to_line(params):
                     except Exception as e:
                         logger.error("エラーが発生しました。",e)
                 else:
-                    text = "「金額（数字）」\nor「今日（今月）をリセット」\nor「予測」を入力してね"
+                    text = "「金額（数字）」or「今日（今月）をリセット」or「予測」を入力してね"
 
                 responses.append(LineReplyMessage.make_text_response(text))
             else:

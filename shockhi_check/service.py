@@ -31,8 +31,11 @@ def reply_to_line(params):
         if type == 'message':
             message = event['message']
             if message['type'] == 'text':
-
-                reply_text = message['text']
+ 
+                reply_texts = message['text'].split(" ")
+                reply_text = reply_texts[0]
+                if len(reply_texts) == 2:  
+                    reply_eat = reply_texts[1]
 
                 # 月末日の取得
                 now_date = datetime.datetime.now()
@@ -66,7 +69,7 @@ def reply_to_line(params):
                     try: 
                         if reply_text != "予測":
                             # 食費の登録
-                            s = Shokuhi(user_id=reply_user_id, money=reply_text)
+                            s = Shokuhi(user_id=reply_user_id, money=reply_text, eat=reply_eat, time_zone=now_timezone)
                             s.save()
 
                         # 食費の取得

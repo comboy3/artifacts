@@ -16,6 +16,8 @@ class Shokuhi(models.Model):
     # id = models.IntegerField(primary_key=True)
     user = models.ForeignKey("User", on_delete=models.CASCADE)
     money = models.IntegerField()
+    eat = models.CharField(max_length=255, null=True)
+    time_zone = models.CharField(max_length=1)
     create_date = models.DateTimeField(auto_now_add=True)
         
     def __str__(self):

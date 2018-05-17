@@ -34,6 +34,7 @@ def reply_to_line(params):
  
                 reply_texts = message['text'].split(" ")
                 reply_text = reply_texts[0]
+                reply_eat = ""
                 if len(reply_texts) == 2:  
                     reply_eat = reply_texts[1]
 

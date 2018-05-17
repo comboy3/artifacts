@@ -40,6 +40,14 @@ def reply_to_line(params):
                 now_month = now_date.month
                 now_day = now_date.day
 
+                # 時間帯の判定
+                if now_date.hour in range(3,11):
+                    now_timezone = "朝"
+                elif now_date.hour in range(12,17):
+                    now_timezone = "昼"
+                else:
+                    now_timezone = "夜"
+
                 start_date = datetime.date(now_year, now_month, 1)
                 end_date = datetime.date(now_year, now_month + 1, 1) - datetime.timedelta(days=1)
                 end_day = end_date.strftime("%d")
@@ -71,7 +79,7 @@ def reply_to_line(params):
                             df_today_money_list = read_frame(today_money_list)
                             today_total = df_today_money_list["money"].sum()
 
-                            text = "食費を教えるよ\n{0}月{1}日：{2:,}円\n{0}月合計：{3:,}円".format(now_month, now_day, today_total, total) 
+                            text = "{0}月{1}日（{4}）\n食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円".format(now_month, now_day, today_total, total, now_timezone) 
                         else:                 
                             median = df_money_list["money"].median()
                             month_money = int(median) * int(end_day)

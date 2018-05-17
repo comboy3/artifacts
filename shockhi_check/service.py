@@ -55,26 +55,30 @@ def reply_to_line(params):
 
                 elif reply_text.isdecimal() or reply_text == "予測":
                     
-                    if reply_text != "予測":
-                        # 食費の登録
-                        s = Shokuhi(user_id=reply_user_id, money=reply_text)
-                        s.save()
+                    try: 
+                        if reply_text != "予測":
+                            # 食費の登録
+                            s = Shokuhi(user_id=reply_user_id, money=reply_text)
+                            s.save()
 
-                    # 食費の取得
-                    money_list = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date]).values("money")
-                    if reply_text != "予測":
-                        total = df_money_list["money"].sum()
-                        today_money_list = money_list.filter(create_date__date=now_date)
-                        df_today_money_list = read_frame(today_money_list)
-                        today_total = df_today_money_list["money"].sum()
-
-                        text = "{0}月{1}日の食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円".format(now_month, now_day, today_total, total) 
-                    else:                 
+                        # 食費の取得
+                        money_list = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date]).values("money")
                         df_money_list = read_frame(money_list)
-                        median = df_money_list["money"].median()
-                        month_money = int(median) * int(end_day)
-                  
-                        text = "{0}月の食費の予測だよ\n予測：{1:,}円".format(now_month, month_money)                     
+                        
+                        if reply_text != "予測":
+                            total = df_money_list["money"].sum()
+                            today_money_list = money_list.filter(create_date__date=now_date)
+                            df_today_money_list = read_frame(today_money_list)
+                            today_total = df_today_money_list["money"].sum()
+
+                            text = "{0}月{1}日の食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円".format(now_month, now_day, today_total, total) 
+                        else:                 
+                            median = df_money_list["money"].median()
+                            month_money = int(median) * int(end_day)
+                    
+                            text = "{0}月の食費の予測だよ\n予測：{1:,}円".format(now_month, month_money)                     
+                    except Exception as e:
+                        logger.error("エラーが発生しました。",e)
                 else:
                     text = "「金額（数字）」\nor「今日（今月）をリセット」\nor「予測」を入力してね"
 

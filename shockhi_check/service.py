@@ -113,7 +113,7 @@ def reply_to_line(params):
                     except Exception as e:
                         logger.error("エラーが発生しました。",e)
                 elif reply_text == "コンコン" or reply_text == "こんこん":
-                    text = "コンコンの食費を教えるよ\n本日：5兆円"
+                    text = "コンコンの食費を教えるよ\n本日：5兆円\n今月：5000兆円"
                 else:
                     text = "「金額（数字）」or「今日（今月）をリセット」を入力してね"
 

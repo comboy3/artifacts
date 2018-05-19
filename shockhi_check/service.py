@@ -56,6 +56,7 @@ def reply_to_line(params):
                 reply_text = reply_texts[0].replace("円","")
                 reply_eat = None
                 reply_date = None
+                reply_time_zone = now_timezone
                 
                 if len(reply_texts) >= 2:
                     try:
@@ -63,7 +64,6 @@ def reply_to_line(params):
                             reply_tmps = reply_tmp.split("/")
                             if len(reply_tmps) == 2:
                                 reply_date = datetime.date(now_year, int(reply_tmps[0]), int(reply_tmps[1]))
-                                now_timezone = None                    
                             else:
                                 reply_eat = reply_tmp
                     except Exception as e:
@@ -73,7 +73,9 @@ def reply_to_line(params):
                         return req
 
                 if reply_date is None:
-                    reply_date = datetime.date(now_year, now_month, now_day)                        
+                    reply_date = datetime.date(now_year, now_month, now_day)  
+                else:
+                    reply_time_zone = None            
 
                 if reply_text == "今月をリセット":
                     d = Shokuhi.objects.filter(user_id=reply_user_id, date__range=[start_date, end_date])
@@ -89,7 +91,7 @@ def reply_to_line(params):
                     try: 
                         if reply_text != "予測":
                             # 食費の登録
-                            s = Shokuhi(user_id=reply_user_id, money=reply_text, eat=reply_eat, date=reply_date, time_zone=now_timezone)
+                            s = Shokuhi(user_id=reply_user_id, money=reply_text, eat=reply_eat, date=reply_date, time_zone=reply_time_zone)
                             s.save()
 
                         # 食費の取得

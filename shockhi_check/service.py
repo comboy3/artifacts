@@ -32,12 +32,6 @@ def reply_to_line(params):
             message = event['message']
             if message['type'] == 'text':
  
-                reply_texts = message['text'].split(" ")
-                reply_text = reply_texts[0]
-                reply_eat = ""
-                if len(reply_texts) == 2:  
-                    reply_eat = reply_texts[1]
-
                 # 月末日の取得
                 now_date = datetime.datetime.now()
                 now_year = now_date.year
@@ -55,6 +49,30 @@ def reply_to_line(params):
                 start_date = datetime.date(now_year, now_month, 1)
                 end_date = datetime.date(now_year, now_month + 1, 1) - datetime.timedelta(days=1)
                 end_day = end_date.strftime("%d")
+                
+                message_text = message['text'].strip()
+                reply_texts = message_text.split(" ")
+                reply_text = reply_texts[0].replace("円","")
+                reply_eat = None
+                reply_date = None
+                
+                if len(reply_texts) >= 2:
+                    try:
+                        for reply_tmp in reply_texts[1:]: 
+                            reply_tmps = reply_tmp.split("/")
+                            if len(reply_tmps) == 2:
+                                reply_date = datetime.date(now_year, int(reply_tmps[0]), int(reply_tmps[1]))
+                                now_timezone = None                    
+                            else:
+                                reply_eat = reply_tmp
+                    except Exception as e:
+                        logger.error("食べ物または日付の取得で失敗しました。",e)
+                        responses.append(LineReplyMessage.make_text_response('入力が間違えてない？'))
+                        req = LineReplyMessage.send_reply(reply_token, responses)
+                        return req
+
+                if reply_date is None:
+                    reply_date = datetime.date(now_year, now_month, now_day)                        
 
                 if reply_text == "今月をリセット":
                     d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date])
@@ -70,7 +88,7 @@ def reply_to_line(params):
                     try: 
                         if reply_text != "予測":
                             # 食費の登録
-                            s = Shokuhi(user_id=reply_user_id, money=reply_text, eat=reply_eat, time_zone=now_timezone)
+                            s = Shokuhi(user_id=reply_user_id, money=reply_text, eat=reply_eat, date=reply_date, time_zone=now_timezone)
                             s.save()
 
                         # 食費の取得

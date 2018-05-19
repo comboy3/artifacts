@@ -67,7 +67,7 @@ def reply_to_line(params):
                                 reply_eat = reply_tmp
                     except Exception as e:
                         logger.error("食べ物または日付の取得で失敗しました。",e)
-                        responses.append(LineReplyMessage.make_text_response('入力が間違えてない？'))
+                        responses.append(LineReplyMessage.make_text_response('入力まちがえてない？'))
                         req = LineReplyMessage.send_reply(reply_token, responses)
                         return req
 

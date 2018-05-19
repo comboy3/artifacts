@@ -34,6 +34,7 @@ def reply_to_line(params):
  
                 # 月末日の取得
                 now_date = datetime.datetime.now()
+                str_now_date = now_date.strftime('%Y-%m-%d')
                 now_year = now_date.year
                 now_month = now_date.month
                 now_day = now_date.day
@@ -75,11 +76,11 @@ def reply_to_line(params):
                     reply_date = datetime.date(now_year, now_month, now_day)                        
 
                 if reply_text == "今月をリセット":
-                    d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date])
+                    d = Shokuhi.objects.filter(user_id=reply_user_id, date__range=[start_date, end_date])
                     d.delete()
                     text = "今月をリセットしました"
                 elif reply_text == "今日をリセット":
-                    d = Shokuhi.objects.filter(user_id=reply_user_id, create_date__date=now_date)
+                    d = Shokuhi.objects.filter(user_id=reply_user_id, date=str_now_date)
                     d.delete()
                     text = "今日をリセットしました"
 
@@ -92,12 +93,12 @@ def reply_to_line(params):
                             s.save()
 
                         # 食費の取得
-                        money_list = Shokuhi.objects.filter(user_id=reply_user_id, create_date__range=[start_date, end_date]).values("money")
+                        money_list = Shokuhi.objects.filter(user_id=reply_user_id, date__range=[start_date, end_date]).values("money")
                         df_money_list = read_frame(money_list)
                         
                         if reply_text != "予測":
                             total = df_money_list["money"].sum()
-                            today_money_list = money_list.filter(create_date__date=now_date)
+                            today_money_list = money_list.filter(date=str_now_date)
                             df_today_money_list = read_frame(today_money_list)
                             today_total = df_today_money_list["money"].sum()
 
@@ -109,6 +110,8 @@ def reply_to_line(params):
                             text = "{0}月の食費の予測だよ\n予測：{1:,}円".format(now_month, month_money)                     
                     except Exception as e:
                         logger.error("エラーが発生しました。",e)
+                elif reply_text == "コンコン" or reply_text == "こんこん":
+                    text = "コンコンの食費を教えるよ\n本日：5兆円"
                 else:
                     text = "「金額（数字）」or「今日（今月）をリセット」or「予測」を入力してね"
 
@@ -155,7 +158,3 @@ class LineReplyMessage:
             headers=headers)
         
         return req
-
-
-class PredictionMoney:
-    """ 予測計算するクラス """

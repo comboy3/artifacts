@@ -40,7 +40,7 @@ def reply_to_line(params):
                 now_day = now_date.day
 
                 # 時間帯の判定
-                if now_date.hour in range(3,11):
+                if now_date.hour in range(3,12):
                     now_timezone = "朝"
                 elif now_date.hour in range(12,17):
                     now_timezone = "昼"

@@ -113,7 +113,7 @@ def reply_to_line(params):
                 elif reply_text == "コンコン" or reply_text == "こんこん":
                     text = "コンコンの食費を教えるよ\n本日：5兆円"
                 else:
-                    text = "「金額（数字）」or「今日（今月）をリセット」or「予測」を入力してね"
+                    text = "「金額（数字）」or「今日（今月）をリセット」を入力してね"
 
                 responses.append(LineReplyMessage.make_text_response(text))
             else:

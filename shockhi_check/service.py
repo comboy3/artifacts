@@ -156,7 +156,7 @@ def reply_to_line(params):
                     text = "コンコンの食費を教えるよ\n本日：5兆円\n今月：5000兆円"
                 # テキストが数字以外、特定の文字列以外の場合
                 else:
-                    text = "「金額（数字）」or「今日（今月）をリセット」を入力してね"
+                    text = "「金額（数字）」or「今日（今月）をリセット」or「予測」を入力してね"
                 # 編集したテキストを返信用のJSONデータに追加する
                 responses.append(LineReplyMessage.make_text_response(text))
             else:

@@ -107,35 +107,44 @@ def reply_to_line(params):
                 elif reply_text.isdecimal() or reply_text[0:1] == "-" or reply_text == "予測":
                     
                     try: 
-                        # テキストが予測以外の場合（数字）
-                        if reply_text != "予測":
+                        # テキストが"予測"と０以外の場合（数字）
+                        if reply_text != "予測" and reply_text != "0":
                             # 食費の登録（ユーザID、金額、食品名、日付、時間帯）
                             s = Shokuhi(user_id=reply_user_id, money=reply_text, eat=reply_eat, date=reply_date, time_zone=reply_time_zone)
                             s.save()
 
                         # 1ヵ月間の食費の取得（金額）
-                        money_list = Shokuhi.objects.filter(user_id=reply_user_id, date__range=[start_date, end_date]).values("money")
+                        money_list = Shokuhi.objects.filter(user_id=reply_user_id, date__range=[start_date, end_date])
                         # テーブルから取得したクエリセットを、データフレームに変換
                         df_money_list = read_frame(money_list)
-                        
+
+                        # 1ヵ月間の食費の合計
+                        total = df_money_list["money"].sum()
+
                         # テキストが予測以外の場合（数字）                        
                         if reply_text != "予測":
-                            # 1ヵ月間の食費の合計
-                            total = df_money_list["money"].sum()
                             # 1か月間の食費のクエリセットから、本日の食費を取得
                             today_money_list = money_list.filter(date=str_now_date)
                             df_today_money_list = read_frame(today_money_list)
                             # 本日の食費の合計
                             today_total = df_today_money_list["money"].sum()
+                            # 入力回数の取得 
+                            input_count = df_money_list["money"].count()
                             # 文字列フォーマットで返信のテキストを編集する
-                            text = "{0}月{1}日（{4}）\n食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円".format(now_month, now_day, today_total, total, now_timezone) 
+                            text = "{0}月{1}日（{4}）\n食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円\n入力回数：{5}回".format(now_month, now_day, today_total, total, now_timezone, input_count) 
                         # テキストが予測の場合（別の算出方法を検討中）
                         else:
-                            # 1か月間の食費の中央値を算出                 
-                            median = df_money_list["money"].median()
-                            # 中央値を1ヵ月間の日数で掛ける
-                            month_money = int(median) * int(end_day)
-                    
+                            # 1か月間で入力した日数           
+                            date_count = df_money_list["date"].nunique()
+                            # 1か月間の入力した食費の平均を算出                 
+                            input_average = total / date_count
+                            # 月末日 - 入力した日数
+                            remaining_days = int(end_day) - date_count
+                            # 平均値を1ヵ月間のあまってる日数で掛ける
+                            remaining_money = input_average * remaining_days
+                            # 予測の食費 
+                            month_money = total + remaining_money
+                            
                             text = "{0}月の食費の予測だよ\n予測：{1:,}円".format(now_month, month_money)                     
                     except Exception as e:
                         logger.error("エラーが発生しました。",e)

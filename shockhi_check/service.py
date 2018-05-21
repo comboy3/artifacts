@@ -146,7 +146,7 @@ def reply_to_line(params):
                             # 予測の食費 
                             month_money = total + remaining_money
                             
-                            text = "{0}月の食費の予測だよ\n1日当たり：{1}円\n予測：{2:,}円".format(now_month, input_average, round(month_money))                 
+                            text = "{0}月の食費の予測だよ\n1日当たり：{1:,}円\n予測：{2:,}円".format(now_month, input_average, round(month_money))                 
                     except Exception as e:
                         logger.error("エラーが発生しました。",e)
                 # 隠しワード（特にいらない）

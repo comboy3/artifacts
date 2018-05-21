@@ -122,6 +122,8 @@ def reply_to_line(params):
 
                         # 1ヵ月間の食費の合計
                         total = df_money_list["money"].sum()
+                        # 1か月間で入力した日数           
+                        date_count = df_money_list["date"].nunique()
 
                         # テキストが予測以外の場合（数字）                        
                         if reply_text != "予測":
@@ -130,14 +132,10 @@ def reply_to_line(params):
                             df_today_money_list = read_frame(today_money_list)
                             # 本日の食費の合計
                             today_total = df_today_money_list["money"].sum()
-                            # 入力回数の取得 
-                            input_count = df_money_list["money"].count()
                             # 文字列フォーマットで返信のテキストを編集する
-                            text = "{0}月{1}日（{4}）\n食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円\n入力回数：{5}回".format(now_month, now_day, today_total, total, now_timezone, input_count) 
+                            text = "{0}月{1}日（{4}）\n食費を教えるよ\n本日：{2:,}円\n今月：{3:,}円\n入力日数：{5}日".format(now_month, now_day, today_total, total, now_timezone, date_count) 
                         # テキストが予測の場合（別の算出方法を検討中）
                         else:
-                            # 1か月間で入力した日数           
-                            date_count = df_money_list["date"].nunique()
                             # 1か月間の入力した食費の平均を算出                 
                             tmp_input_average = total / date_count
                             input_average = Decimal(tmp_input_average).quantize(Decimal('0'), rounding=ROUND_HALF_UP)

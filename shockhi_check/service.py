@@ -7,6 +7,8 @@ from django_pandas.io import read_frame
 from shockhi_check.make_message import LineReplyMessage
 from shockhi_check.models import Shokuhi, User
 
+from decimal import Decimal, ROUND_HALF_UP
+
 logger = logging.getLogger()
 
 def reply_to_line(params):
@@ -137,7 +139,8 @@ def reply_to_line(params):
                             # 1か月間で入力した日数           
                             date_count = df_money_list["date"].nunique()
                             # 1か月間の入力した食費の平均を算出                 
-                            input_average = total / date_count
+                            tmp_input_average = total / date_count
+                            input_average = Decimal(tmp_input_average).quantize(Decimal('0'), rounding=ROUND_HALF_UP)
                             # 月末日 - 入力した日数
                             remaining_days = int(end_day) - date_count
                             # 平均値を1ヵ月間のあまってる日数で掛ける
@@ -145,7 +148,7 @@ def reply_to_line(params):
                             # 予測の食費 
                             month_money = total + remaining_money
                             
-                            text = "{0}月の食費の予測だよ\n予測：{1:,}円".format(now_month, month_money)                     
+                            text = "{0}月の食費の予測だよ\n1日当たり：{1}円\n予測：{2:,}円".format(now_month, input_average, round(month_money))                 
                     except Exception as e:
                         logger.error("エラーが発生しました。",e)
                 # 隠しワード（特にいらない）

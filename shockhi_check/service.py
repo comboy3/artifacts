@@ -178,12 +178,14 @@ def edit_text(reply_texts, now_year):
             if len(reply_tmps) == 2:
                 # 登録用の日付の変数に、受信した日付を代入
                 reply_date = datetime.date(now_year, int(reply_tmps[0]), int(reply_tmps[1]))
+                resut_list.update({"eat" : None})
                 resut_list.update({"date" : reply_date})
             # スラッシュで分割されない場合（食品名の場合）
             else:
                 # 登録用の食品名の変数に、受信した食品名を代入
                 reply_eat = reply_tmp
-                resut_list.update({"eat":reply_eat})
+                resut_list.update({"eat" : reply_eat})
+                resut_list.update({"date" : None})
 
         return resut_list
     # エラーになった場合
